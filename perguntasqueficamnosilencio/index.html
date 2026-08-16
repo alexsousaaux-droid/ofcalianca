@@ -383,6 +383,76 @@
             </p>
           </div>
         </section>
+        <!-- Seção de Depoimentos -->
+        <section class="px-6 py-16 sm:px-9" style="background: var(--color-card, #f5f0e8); border-top: 1px solid rgba(0,0,0,0.07); border-bottom: 1px solid rgba(0,0,0,0.07);">
+          <div class="mx-auto max-w-lg text-center">
+            <span class="eyebrow text-gold">Depoimentos</span>
+            <h2 class="text-[1.75rem] sm:text-[2rem] mt-2 text-foreground">
+              O que dizem os casais que já leram
+            </h2>
+          </div>
+
+          <!-- Layout: Carrossel com imagens em tamanho máximo e setas flutuantes -->
+          <div style="position: relative; width: 100%; max-width: 500px; margin: 32px auto 0; padding: 0 8px;">
+
+            <!-- Viewport (ocupa 100% da largura útil) -->
+            <div style="width: 100%; overflow: hidden; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.10);">
+              <!-- Track: 300% de largura, 3 slides lado a lado -->
+              <div id="depoimentos-track" style="display: flex; width: 300%; transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);">
+                <div style="width: 33.333%; flex-shrink: 0;">
+                  <img src="/perguntasqueficamnosilencio/depoimentos/1.png" alt="Depoimento 1"
+                    style="width: 100%; height: auto; display: block;" />
+                </div>
+                <div style="width: 33.333%; flex-shrink: 0;">
+                  <img src="/perguntasqueficamnosilencio/depoimentos/2.png" alt="Depoimento 2"
+                    style="width: 100%; height: auto; display: block;" />
+                </div>
+                <div style="width: 33.333%; flex-shrink: 0;">
+                  <img src="/perguntasqueficamnosilencio/depoimentos/3.png" alt="Depoimento 3"
+                    style="width: 100%; height: auto; display: block;" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Seta Esquerda (Absoluta) -->
+            <button id="prev-depoimento" aria-label="Anterior"
+              style="position: absolute; left: -14px; top: 50%; transform: translateY(-50%); z-index: 10;
+                     width: 42px; height: 42px; border-radius: 50%;
+                     background: #fff; border: 1px solid rgba(0,0,0,0.12);
+                     box-shadow: 0 2px 10px rgba(0,0,0,0.15); cursor: pointer;
+                     display: flex; align-items: center; justify-content: center; outline: none;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#444" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M15 18l-6-6 6-6"/>
+              </svg>
+            </button>
+
+            <!-- Seta Direita (Absoluta) -->
+            <button id="next-depoimento" aria-label="Próximo"
+              style="position: absolute; right: -14px; top: 50%; transform: translateY(-50%); z-index: 10;
+                     width: 42px; height: 42px; border-radius: 50%;
+                     background: #fff; border: 1px solid rgba(0,0,0,0.12);
+                     box-shadow: 0 2px 10px rgba(0,0,0,0.15); cursor: pointer;
+                     display: flex; align-items: center; justify-content: center; outline: none;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#444" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 18l6-6-6-6"/>
+              </svg>
+            </button>
+
+          </div>
+
+          <!-- Dots -->
+          <div style="display: flex; justify-content: center; gap: 8px; margin-top: 18px;">
+            <button class="dep-dot" data-index="0" aria-label="Depoimento 1"
+              style="width: 10px; height: 10px; border-radius: 50%; border: none; cursor: pointer;
+                     background: var(--color-gold, #b5882a); transition: background 0.25s, transform 0.25s; transform: scale(1.2);"></button>
+            <button class="dep-dot" data-index="1" aria-label="Depoimento 2"
+              style="width: 10px; height: 10px; border-radius: 50%; border: none; cursor: pointer;
+                     background: rgba(0,0,0,0.18); transition: background 0.25s, transform 0.25s;"></button>
+            <button class="dep-dot" data-index="2" aria-label="Depoimento 3"
+              style="width: 10px; height: 10px; border-radius: 50%; border: none; cursor: pointer;
+                     background: rgba(0,0,0,0.18); transition: background 0.25s, transform 0.25s;"></button>
+          </div>
+        </section>
         <section id="ofertabase" class="bg-parchment px-6 py-16 sm:px-9">
           <h2 class="text-center text-[1.75rem] sm:text-[2rem]">
             Acesse hoje o guia completo
@@ -651,9 +721,24 @@
         </footer>
       </main>
     </div>
-    <!--/$-->
     <script>
       document.addEventListener("DOMContentLoaded", function () {
+        // Correção de caminhos para ambiente de desenvolvimento local (segura contra erros)
+        try {
+          if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" || window.location.protocol === "file:") {
+            document.querySelectorAll("img, link, source").forEach((el) => {
+              const attr = el.tagName === "LINK" ? "href" : "src";
+              const val = el.getAttribute(attr);
+              if (val && val.startsWith("/perguntasqueficamnosilencio/")) {
+                el.setAttribute(attr, val.replace("/perguntasqueficamnosilencio/", "./"));
+              }
+            });
+          }
+        } catch (err) {
+          console.warn("Erro ao corrigir caminhos locais:", err);
+        }
+
+        // Controle do FAQ
         const faqButtons = document.querySelectorAll(".faq-btn");
         faqButtons.forEach((button) => {
           button.addEventListener("click", () => {
@@ -670,6 +755,38 @@
             }
           });
         });
+
+        // Controle do Carrossel de Depoimentos
+        const track = document.getElementById("depoimentos-track");
+        const prevBtn = document.getElementById("prev-depoimento");
+        const nextBtn = document.getElementById("next-depoimento");
+        const dots = document.querySelectorAll(".dep-dot");
+        const TOTAL = 3;
+        let current = 0;
+
+        if (track && prevBtn && nextBtn) {
+          const goTo = (idx) => {
+            current = Math.max(0, Math.min(TOTAL - 1, idx));
+            // track tem width: 300%, então cada slide ocupa 33.333% do track
+            // para mover 1 slide: translateX de -33.333%
+            track.style.transform = "translateX(-" + (current * 33.3333) + "%)";
+            dots.forEach((dot, i) => {
+              dot.style.background = i === current
+                ? "var(--color-gold, #b5882a)"
+                : "rgba(0,0,0,0.18)";
+              dot.style.transform = i === current ? "scale(1.2)" : "scale(1)";
+            });
+          };
+
+          prevBtn.addEventListener("click", () => goTo(current - 1));
+          nextBtn.addEventListener("click", () => goTo(current + 1));
+
+          dots.forEach((dot) => {
+            dot.addEventListener("click", () => {
+              goTo(parseInt(dot.getAttribute("data-index")));
+            });
+          });
+        }
       });
     </script>
   </body>
